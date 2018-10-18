@@ -1,0 +1,684 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MusicListModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Albums">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tittle" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Author" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Msg" Type="varchar" MaxLength="7000" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="id_Song" Type="int" Nullable="false" />
+          <Property Name="id_User" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="List">
+          <Key>
+            <PropertyRef Name="id_Playlist" />
+            <PropertyRef Name="id_Songs" />
+          </Key>
+          <Property Name="id_Playlist" Type="int" Nullable="false" />
+          <Property Name="id_Songs" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Role" Type="int" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Firstname" Type="varchar" MaxLength="50" />
+          <Property Name="Lastname" Type="varchar" MaxLength="50" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Playlista">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_User" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReplayComment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Msg" Type="varchar" MaxLength="7000" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="id_Comment" Type="int" Nullable="false" />
+          <Property Name="id_User" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Score">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_Songs" Type="int" Nullable="false" />
+          <Property Name="Likes" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="id_User" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Songs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tittle" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Author" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Link" Type="varchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Id_Albums" Type="int" Nullable="false" />
+          <Property Name="Details" Type="varchar(max)" />
+        </EntityType>
+        <Association Name="FK_Comment_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comment_Songs">
+          <End Role="Songs" Type="Self.Songs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Songs">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="id_Song" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DScore_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Score" Type="Self.Score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Score">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DScore_Songs">
+          <End Role="Songs" Type="Self.Songs" Multiplicity="1" />
+          <End Role="Score" Type="Self.Score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Songs">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Score">
+              <PropertyRef Name="id_Songs" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_List_Playlist">
+          <End Role="Playlista" Type="Self.Playlista" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="List" Type="Self.List" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Playlista">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="List">
+              <PropertyRef Name="id_Playlist" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_List_Songs">
+          <End Role="Songs" Type="Self.Songs" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="List" Type="Self.List" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Songs">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="List">
+              <PropertyRef Name="id_Songs" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="id_Role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Playlist_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Playlista" Type="Self.Playlista" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Playlista">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReplayComment_Comment">
+          <End Role="Comment" Type="Self.Comment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ReplayComment" Type="Self.ReplayComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Comment">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReplayComment">
+              <PropertyRef Name="id_Comment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReplayComment_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ReplayComment" Type="Self.ReplayComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReplayComment">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Songs_Albums">
+          <End Role="Albums" Type="Self.Albums" Multiplicity="1" />
+          <End Role="Songs" Type="Self.Songs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Albums">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Songs">
+              <PropertyRef Name="Id_Albums" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MusicListModelStoreContainer">
+          <EntitySet Name="Albums" EntityType="Self.Albums" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="List" EntityType="Self.List" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Playlista" EntityType="Self.Playlista" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReplayComment" EntityType="Self.ReplayComment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Score" EntityType="Self.Score" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Songs" EntityType="Self.Songs" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Comment_Login" Association="Self.FK_Comment_Login">
+            <End Role="Login" EntitySet="Login" />
+            <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_Songs" Association="Self.FK_Comment_Songs">
+            <End Role="Songs" EntitySet="Songs" />
+            <End Role="Comment" EntitySet="Comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DScore_Login" Association="Self.FK_DScore_Login">
+            <End Role="Login" EntitySet="Login" />
+            <End Role="Score" EntitySet="Score" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DScore_Songs" Association="Self.FK_DScore_Songs">
+            <End Role="Songs" EntitySet="Songs" />
+            <End Role="Score" EntitySet="Score" />
+          </AssociationSet>
+          <AssociationSet Name="FK_List_Playlist" Association="Self.FK_List_Playlist">
+            <End Role="Playlista" EntitySet="Playlista" />
+            <End Role="List" EntitySet="List" />
+          </AssociationSet>
+          <AssociationSet Name="FK_List_Songs" Association="Self.FK_List_Songs">
+            <End Role="Songs" EntitySet="Songs" />
+            <End Role="List" EntitySet="List" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login_Role" Association="Self.FK_Login_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Login" EntitySet="Login" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Playlist_Login" Association="Self.FK_Playlist_Login">
+            <End Role="Login" EntitySet="Login" />
+            <End Role="Playlista" EntitySet="Playlista" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReplayComment_Comment" Association="Self.FK_ReplayComment_Comment">
+            <End Role="Comment" EntitySet="Comment" />
+            <End Role="ReplayComment" EntitySet="ReplayComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReplayComment_Login" Association="Self.FK_ReplayComment_Login">
+            <End Role="Login" EntitySet="Login" />
+            <End Role="ReplayComment" EntitySet="ReplayComment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Songs_Albums" Association="Self.FK_Songs_Albums">
+            <End Role="Albums" EntitySet="Albums" />
+            <End Role="Songs" EntitySet="Songs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MusicListModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tittle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Songs" Relationship="Self.FK_Songs_Albums" FromRole="Albums" ToRole="Songs" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Msg" Type="String" MaxLength="7000" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="id_Song" Type="Int32" Nullable="false" />
+          <Property Name="id_User" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_Comment_Login" FromRole="Comment" ToRole="Login" />
+          <NavigationProperty Name="Song" Relationship="Self.FK_Comment_Songs" FromRole="Comment" ToRole="Songs" />
+          <NavigationProperty Name="ReplayComments" Relationship="Self.FK_ReplayComment_Comment" FromRole="Comment" ToRole="ReplayComment" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Role" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Login" FromRole="Login" ToRole="Comment" />
+          <NavigationProperty Name="Scores" Relationship="Self.FK_DScore_Login" FromRole="Login" ToRole="Score" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_Login_Role" FromRole="Login" ToRole="Role" />
+          <NavigationProperty Name="Playlistas" Relationship="Self.FK_Playlist_Login" FromRole="Login" ToRole="Playlista" />
+          <NavigationProperty Name="ReplayComments" Relationship="Self.FK_ReplayComment_Login" FromRole="Login" ToRole="ReplayComment" />
+        </EntityType>
+        <EntityType Name="Playlista">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_User" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_Playlist_Login" FromRole="Playlista" ToRole="Login" />
+          <NavigationProperty Name="Songs" Relationship="Self.List" FromRole="Playlista" ToRole="Songs" />
+        </EntityType>
+        <EntityType Name="ReplayComment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Msg" Type="String" MaxLength="7000" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="id_Comment" Type="Int32" Nullable="false" />
+          <Property Name="id_User" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Comment" Relationship="Self.FK_ReplayComment_Comment" FromRole="ReplayComment" ToRole="Comment" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_ReplayComment_Login" FromRole="ReplayComment" ToRole="Login" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Logins" Relationship="Self.FK_Login_Role" FromRole="Role" ToRole="Login" />
+        </EntityType>
+        <EntityType Name="Score">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_Songs" Type="Int32" Nullable="false" />
+          <Property Name="Likes" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="id_User" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Login" Relationship="Self.FK_DScore_Login" FromRole="Score" ToRole="Login" />
+          <NavigationProperty Name="Song" Relationship="Self.FK_DScore_Songs" FromRole="Score" ToRole="Songs" />
+        </EntityType>
+        <EntityType Name="Song">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tittle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Link" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Id_Albums" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Album" Relationship="Self.FK_Songs_Albums" FromRole="Songs" ToRole="Albums" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_Songs" FromRole="Songs" ToRole="Comment" />
+          <NavigationProperty Name="Scores" Relationship="Self.FK_DScore_Songs" FromRole="Songs" ToRole="Score" />
+          <NavigationProperty Name="Playlistas" Relationship="Self.List" FromRole="Songs" ToRole="Playlista" />
+          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Songs_Albums">
+          <End Role="Albums" Type="Self.Album" Multiplicity="1" />
+          <End Role="Songs" Type="Self.Song" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Albums">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Songs">
+              <PropertyRef Name="Id_Albums" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comment_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comment_Songs">
+          <End Role="Songs" Type="Self.Song" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comment" Type="Self.Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Songs">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="id_Song" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReplayComment_Comment">
+          <End Role="Comment" Type="Self.Comment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ReplayComment" Type="Self.ReplayComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Comment">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReplayComment">
+              <PropertyRef Name="id_Comment" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DScore_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Score" Type="Self.Score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Score">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="id_Role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Playlist_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1" />
+          <End Role="Playlista" Type="Self.Playlista" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Playlista">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReplayComment_Login">
+          <End Role="Login" Type="Self.Login" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ReplayComment" Type="Self.ReplayComment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReplayComment">
+              <PropertyRef Name="id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DScore_Songs">
+          <End Role="Songs" Type="Self.Song" Multiplicity="1" />
+          <End Role="Score" Type="Self.Score" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Songs">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Score">
+              <PropertyRef Name="id_Songs" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="List">
+          <End Role="Playlista" Type="Self.Playlista" Multiplicity="*" />
+          <End Role="Songs" Type="Self.Song" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="MusicListEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Albums" EntityType="Self.Album" />
+          <EntitySet Name="Comments" EntityType="Self.Comment" />
+          <EntitySet Name="Logins" EntityType="Self.Login" />
+          <EntitySet Name="Playlistas" EntityType="Self.Playlista" />
+          <EntitySet Name="ReplayComments" EntityType="Self.ReplayComment" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Scores" EntityType="Self.Score" />
+          <EntitySet Name="Songs" EntityType="Self.Song" />
+          <AssociationSet Name="FK_Songs_Albums" Association="Self.FK_Songs_Albums">
+            <End Role="Albums" EntitySet="Albums" />
+            <End Role="Songs" EntitySet="Songs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_Login" Association="Self.FK_Comment_Login">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comment_Songs" Association="Self.FK_Comment_Songs">
+            <End Role="Songs" EntitySet="Songs" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReplayComment_Comment" Association="Self.FK_ReplayComment_Comment">
+            <End Role="Comment" EntitySet="Comments" />
+            <End Role="ReplayComment" EntitySet="ReplayComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DScore_Login" Association="Self.FK_DScore_Login">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="Score" EntitySet="Scores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login_Role" Association="Self.FK_Login_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Login" EntitySet="Logins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Playlist_Login" Association="Self.FK_Playlist_Login">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="Playlista" EntitySet="Playlistas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReplayComment_Login" Association="Self.FK_ReplayComment_Login">
+            <End Role="Login" EntitySet="Logins" />
+            <End Role="ReplayComment" EntitySet="ReplayComments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DScore_Songs" Association="Self.FK_DScore_Songs">
+            <End Role="Songs" EntitySet="Songs" />
+            <End Role="Score" EntitySet="Scores" />
+          </AssociationSet>
+          <AssociationSet Name="List" Association="Self.List">
+            <End Role="Playlista" EntitySet="Playlistas" />
+            <End Role="Songs" EntitySet="Songs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MusicListModelStoreContainer" CdmEntityContainer="MusicListEntities2">
+          <EntitySetMapping Name="Albums">
+            <EntityTypeMapping TypeName="MusicListModel.Album">
+              <MappingFragment StoreEntitySet="Albums">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Tittle" ColumnName="Tittle" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="MusicListModel.Comment">
+              <MappingFragment StoreEntitySet="Comment">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Msg" ColumnName="Msg" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="id_Song" ColumnName="id_Song" />
+                <ScalarProperty Name="id_User" ColumnName="id_User" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="MusicListModel.Login">
+              <MappingFragment StoreEntitySet="Login">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_Role" ColumnName="id_Role" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Playlistas">
+            <EntityTypeMapping TypeName="MusicListModel.Playlista">
+              <MappingFragment StoreEntitySet="Playlista">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_User" ColumnName="id_User" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReplayComments">
+            <EntityTypeMapping TypeName="MusicListModel.ReplayComment">
+              <MappingFragment StoreEntitySet="ReplayComment">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Msg" ColumnName="Msg" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="id_Comment" ColumnName="id_Comment" />
+                <ScalarProperty Name="id_User" ColumnName="id_User" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="MusicListModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Scores">
+            <EntityTypeMapping TypeName="MusicListModel.Score">
+              <MappingFragment StoreEntitySet="Score">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_Songs" ColumnName="id_Songs" />
+                <ScalarProperty Name="Likes" ColumnName="Likes" />
+                <ScalarProperty Name="id_User" ColumnName="id_User" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Songs">
+            <EntityTypeMapping TypeName="MusicListModel.Song">
+              <MappingFragment StoreEntitySet="Songs">
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Tittle" ColumnName="Tittle" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="Link" ColumnName="Link" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id_Albums" ColumnName="Id_Albums" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="List" TypeName="MusicListModel.List" StoreEntitySet="List">
+            <EndProperty Name="Playlista">
+              <ScalarProperty Name="id" ColumnName="id_Playlist" />
+            </EndProperty>
+            <EndProperty Name="Songs">
+              <ScalarProperty Name="id" ColumnName="id_Songs" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
