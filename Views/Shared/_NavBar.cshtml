@@ -1,0 +1,53 @@
+﻿
+<div class="navbar navbar-inverse navbar-fixed-top">
+
+    <div class="container">
+
+        <div class="navbar-header">
+            <a class="navbar-brand">
+
+                <img style="max-width:30px; margin-left: -7px;" src="~/img/nuta.png" />
+                </a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                @Html.ActionLink("GlobalExp", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+</div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+               
+              
+                @if (User.Identity.IsAuthenticated)
+                {
+                <li>@Html.ActionLink("Your storage", "Index", "Playlistas")</li>
+                }
+                 <li>@Html.ActionLink("Open storage", "Index", "Songs")</li>   
+                  
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.Identity.Name !=null)
+                        {
+                            if (User.IsInRole("Admin"))
+                            {
+
+                       <li>@Html.ActionLink("Albums", "Index", "Albums")</li>
+
+                           <li>@Html.ActionLink("Users", "Index", "AdminLogins")</li>
+
+
+
+                            }
+                        }
+                    }
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+</ul>
+
+            @Html.Partial("_LoginPartial")
+            </div>
+            </div>
+            </div>
+

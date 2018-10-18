@@ -1,0 +1,62 @@
+﻿@model PagedList.IPagedList<StronaMuzy.Models.Album>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>
+    <span class="label glyphicon-bishop">@Html.ActionLink("Add new Album", "Create")</span>
+</h3>   
+@using (Html.BeginForm())
+{
+    <p>
+        Find by Tittle or Author: @Html.TextBox("searchBox", ViewBag.Filter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Tittle", "Index", new { sort = ViewBag.TittleSort, filter = ViewBag.Filter })
+        </th>
+        <th>
+            @Html.ActionLink("Author", "Index", new { sort = ViewBag.AuthorSort, filter = ViewBag.Filter })
+        </th>
+        <th>
+            @Html.ActionLink("Date", "Index", new { sort = ViewBag.DateSort, filter = ViewBag.Filter })
+        </th>
+        <th></th>
+    </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tittle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id}) |
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </td>
+            </tr>
+
+        }
+
+    </table>
+    <div>
+
+
+        @Html.ActionLink("Back to Create Song", "Create", "Songs")
+    </div>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sort = ViewBag.CurrentSort, filter = ViewBag.Filter }))

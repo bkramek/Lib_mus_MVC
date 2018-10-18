@@ -1,0 +1,146 @@
+﻿@model StronaMuzy.Models.PsongList
+
+@*@{
+        ViewBag.Title = "AddSongToList";
+    }
+
+    <h2>Edit</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Playlista</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Sonk.id_Songs)
+
+
+
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AllPlaylists, "AllSongs", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.ListBoxFor(m => m.SelectedPlaylists, Model.AllPlaylists, new { size = 5 })
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+
+
+@*@using (Ajax.BeginForm("Songs", "AddSongToList", new AjaxOptions { HttpMethod = "Post" }))
+    {
+        @Html.AntiForgeryToken()*@
+@*@using (Html.BeginForm())
+    {
+
+        <div class="col-xs-12">
+
+            @*<div class="modal fade" id="addSongs" data-keyboard="false" tabindex="-1">*@
+@*<div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"> Login</h4>
+
+
+                </div>
+                <div class="modal-body">
+                    <form id="form">
+                        <div class="form-group">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.Sonk.id_Songs)
+
+
+
+
+
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AllPlaylists, "AllSongs", new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.ListBoxFor(m => m.SelectedPlaylists, Model.AllPlaylists, new { size = 5 })
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Confirm" class="btn btn-default" id="confirm" />
+                    <input type="submit" value="Close" class="btn btn-default" id="close" data-dismiss="modal" />
+
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Sonk.id)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AllPlaylists, "Add", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.ListBoxFor(m => m.SelectedPlaylists, Model.AllPlaylists, new { size = 5 })
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="Confirm" class="btn btn-primary" id="confirm" />
+                <button type="button" onclick="javascript:window.location.reload()" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+@*<script>
+        $(document).ready(function (){
+            $("#loginModal").modal({
+                backdrop:'static',
+            });
+        });
+        $("body").keyup(function (event)
+        {
+            if (event.keyCode === 13)
+            {
+                $("#confirm").click();
+            }
+        });
+    </script>*@

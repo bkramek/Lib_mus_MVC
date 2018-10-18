@@ -1,0 +1,166 @@
+﻿
+@model IQueryable<StronaMuzy.Models.PostsVM>
+@{
+    ViewBag.Title = "GetPosts";
+}
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+
+
+        <div class="body">
+       
+
+            <div class="postMessage" style="margin-top: 11px; margin-left: 20px; ">
+                @if (item.Album == "None")
+                {
+
+                }
+                else
+                {
+                    <h5> <span class="label label-warning"> @string.Format(" {0}", item.Album) </span></h5>
+                }
+             
+                <p class="message">
+                    <h2>
+                        @item.Tittle - @item.Author
+                    </h2>
+                </p>
+
+                <h4><a href="@item.Link" class="label label-warning" target="_blank">@item.Link</a></h4> <br />
+
+            </div>
+           <h3>Details</h3> 
+            <div class="panel-footer">
+                <div class="text-justify" style="word-wrap:break-word; ">
+                    <br />
+                    <pre style="font-family:'Futura PT'">
+                    @string.Format(" {0}", item.Details)
+                        </pre>
+                    <br />
+                    <hr />
+                </div>
+
+
+
+
+                <button type="button" class="btn btn-default Comment" data-id="@item.PostID" value="Comment">
+                    <span class="glyphicon glyphicon-comment" aria-hidden="true"></span> Comments
+                </button>
+            </div>
+            </div>
+            <div id="@string.Format("{0}_{1}","commentsBlock", item.PostID)" style="word-wrap:break-word; border: 1px solid #f1eaea;">
+
+                <div class="AddComment" style="margin-left: 30%;  margin-bottom: 5px; margin-top: 8px;">
+                    <input type="text" id="@string.Format("{0}_{1}", "comment", item.PostID)" class="form-control" placeholder="Add a public comment..." style="display: inline;" />
+                    <button type="button"  class="btn btn-default addComment" data-id="@item.PostID"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
+                </div>
+
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <p style="margin-left: 0px; margin-top: -10px; ">
+                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                <time class="timeago" @string.Format( "It was added {0}", @item.PostedDate)>Song was added @item.PostedDate</time>
+            </p>    
+
+            @Html.ActionLink("Back to List", "Index")
+
+    }
+}
+
+@section Scripts
+{
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+
+            //Click Comment
+            $('.Comment').on('click', function () {
+
+                var id = $(this).attr("data-id");
+                var allCommentsArea = $('<div>').addClass('allComments_' + id);
+
+                //function that allow us to get all comments related to post id
+                $.ajax({
+
+                    type: 'GET',
+                    url: '@Url.Action("GetComments", "Songs")',
+                    data: { postId: id },
+                    success: function (response) {
+
+                        if ($('div').hasClass('allComments_' + id + ''))
+                        {
+                            $('div[class=allComments_' + id + ']').remove();
+                        }
+                        //console.log(response);
+
+
+                        allCommentsArea.html(response);
+                        allCommentsArea.prependTo('#commentsBlock_' + id);
+
+
+                    },
+                    error: function (response) {
+                        alert('Sorry: Comments cannot be loaded !');
+                    }
+
+
+                })
+
+            });
+
+            //Add New Comment
+            $('.addComment').on('click', function () {
+
+                var postId = $(this).attr('data-id');
+                var commentMsg = $('#comment_' + postId).val();
+                var dateTimeNow = new Date();
+
+                //alert('Hello');
+                var comment = {
+                    CommentMsg: commentMsg,
+                    CommentedDate: dateTimeNow.toLocaleString()
+                };
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: '@Url.Action("AddComment", "Songs")',
+                    data: { comment, postId },
+                    success: function (response) {
+
+                        $('div[class=allComments_' + postId + ']').remove();
+
+                        var allCommentsArea = $('<div>').addClass('allComments_' + postId);
+                        allCommentsArea.html(response);
+
+                        allCommentsArea.prependTo('#commentsBlock_' + postId);
+
+                    },
+                    error: function (response) {
+                        alert('Sorry: Something Wrong');
+                    }
+
+                });
+
+            });
+
+            jQuery("time.timeago").timeago();
+
+        });
+  
+
+    </script>
+
+
+}  
